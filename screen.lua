@@ -16,6 +16,17 @@ local urls = {
     {"assets.prod.novaquark.com/65967/52f8e0c6-cfea-4c8c-96b6-bf66fe170b0d.jpg", 10, 19},
     {"assets.prod.novaquark.com/65967/4e271752-3fa8-4ad3-abdf-26ca7e057f5d.jpg", 12, 17},
   }
+if not loading then
+    local rslib = require('rslib')
+    local text = "One moment, may lag while loading..." 
+    local config = { fontSize = 69 }
+    rslib.drawQuickText(text, config)
+    loading = false
+end
+local u = {}
+for k, v in ipairs(urls) do
+    u[k] = loadImage(v[1])
+end
 if not frameBuffer then
     frameBuffer = {}
     for k, v in ipairs(urls) do
@@ -33,13 +44,12 @@ local rx, ry = getResolution()
 local l = createLayer()
 
 local frame = (math.floor(getTime() * fps) % totalFrames) + 1
-
-local i = loadImage(urls[frames[frame][1]][1])
-local i2 = loadImage(urls[((frames[frame][1] % #urls) + 1)][1])
+local i = u[frames[frame][1]] --this
+    
 
 local w, h = getImageSize(i)
 local sx, sy = w / urls[frames[frame][1]][2], h / urls[frames[frame][1]][3]
-logMessage(frames[frame][1].." / "..frames[frame][2].." / "..frames[frame][3])
+--logMessage(frames[frame][1].." / "..frames[frame][2].." / "..frames[frame][3])
 addImageSub(l, i, 0, 0, rx, ry, frames[frame][2] * sx, frames[frame][3] * sy, sx, sy)
 
 requestAnimationFrame(1)
